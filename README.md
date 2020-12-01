@@ -25,6 +25,6 @@ The prefered way is to keep the above container running, and in a new terminal, 
 1.  Get this container's ID by entering `docker ps` and finding the container ID listed with `docker_karax_tables_csv`.
 
 2.  Enter ```docker exec -it <container_id> /bin/bash```
-3.  Enter ```nimble frontend``` and refresh the page.
+3.  Enter ```nimble frontend``` in the bash prompt and refresh the page.
 
 To alter the backend, you'll have to save changes to ```backend```, and restart the container.
