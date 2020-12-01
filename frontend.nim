@@ -5,6 +5,14 @@ when defined(js):
     include karax/prelude
     import karax/[kdom, kajax]
 
+    const table_style = TableStyle(
+        cell_padding: 2,
+        cell_spacing: 3,
+        table_class: "bg-green",
+        thead_class: "f3 helvetica",
+        tbody_class: "f5 dark-green helvetica"
+    )
+
     var 
         foods: seq[Food]
         filtered_foods: seq[Food]
@@ -30,11 +38,11 @@ when defined(js):
 
                     # if search box is empty - show all rows
                     if search_filter == "":
-                        foods.karax_table(all_columns = ReadAndWrite)
+                        foods.karax_table(table_style = table_style, all_columns = ReadAndWrite)
 
                     # otherwise, show filtered results
                     else:
-                        filtered_foods.karax_table(all_columns = ReadAndWrite)
+                        filtered_foods.karax_table(table_style = table_style, all_columns = ReadAndWrite)
 
                     button(onclick = () => load_food()):
                         text "Load food"
