@@ -1,10 +1,9 @@
 import ./karax_tables/src/karax_tables
-import karax / [kajax]
 import app_types, sugar, json, sequtils
 
 when defined(js):
     include karax/prelude
-    import karax/[kdom]
+    import karax/[kdom, kajax]
 
     var 
         foods: seq[Food]

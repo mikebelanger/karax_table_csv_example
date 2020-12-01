@@ -2,6 +2,8 @@ import csvtools, strutils, jester, json
 import app_types
 
 routes:
+    get "/":
+        redirect "/index.html"
 
     get "/all_foods.json":
 
