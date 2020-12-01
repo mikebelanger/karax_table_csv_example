@@ -16,4 +16,15 @@ then
 docker-compose up
 ```
 
-5.  Enter `localhost:5000` in your browser.  Hit "Load foods".
+5.  Enter `localhost:5000` in your browser.  Hit "Load food".
+
+### Changing the frontend
+
+The prefered way is to keep the above container running, and in a new terminal, do:
+
+1.  Get this container's ID by entering `docker ps` and finding the container ID listed with `docker_karax_tables_csv`.
+
+2.  Enter ```docker exec -it <container_id> /bin/bash```
+3.  Enter ```nimble frontend``` and reload the browser.
+
+To alter the backend, you'll have to save changes to ```backend```, and restart the container.
