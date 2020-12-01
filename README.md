@@ -14,6 +14,6 @@ docker-compose build
 then 
 ```
 docker-compose up
-```.
+```
 
 5.  Enter `localhost:5000` in your browser.  Hit "Load foods".
