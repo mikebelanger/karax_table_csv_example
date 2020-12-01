@@ -1,6 +1,7 @@
 # karax_table_csv_example
-An example of using [csvtools](https://github.com/unicredit/csvtools) and [karax_tables](https://github.com/mikebelanger/karax_tables) for viewing CSV data in a web-frontend.
+An example of using [csvtools](https://github.com/unicredit/csvtools) and [karax_tables](https://github.com/mikebelanger/karax_tables) for viewing CSV data in a web-frontend.  The CSV contains a list of foods, which can be found at [data.world](https://data.world/alexandra/generic-food-database).  Big thanks goes to [Flaneurette](https://github.com/flaneurette) for compiling this dataset.
 
+![img](world_foods.png)
 
 ### To try:
 
