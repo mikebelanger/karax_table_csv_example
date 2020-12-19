@@ -5,14 +5,6 @@ when defined(js):
     include karax/prelude
     import karax/[kdom, kajax]
 
-    const table_style = TableStyle(
-        cell_padding: 2,
-        cell_spacing: 3,
-        table_class: "bg-green",
-        thead_class: "f3 helvetica",
-        tbody_class: "f5 dark-green helvetica"
-    )
-
     var 
         foods: seq[Food]
         filtered_foods: seq[Food]
@@ -20,9 +12,9 @@ when defined(js):
 
     proc search_foods() =
         search_filter = $(document.querySelector("#search").value)
-        filtered_foods = foods.search(search_filter)
 
     proc load_food() =
+        
         ajaxGet("/all_foods.json", headers = @[], proc(httpStatus: int, result: cstring) =
             for json_food in ($result).parseJson:
                 foods.add(
@@ -36,13 +28,11 @@ when defined(js):
                 tdiv:
                     input(`type` = "text", id = "search", onkeyup = () => search_foods(), placeholder = "search table")
 
-                    # if search box is empty - show all rows
-                    if search_filter == "":
-                        foods.karax_table(table_style = table_style, all_columns = ReadAndWrite)
-
-                    # otherwise, show filtered results
-                    else:
-                        filtered_foods.karax_table(table_style = table_style, all_columns = ReadAndWrite)
+                    for index, food in foods.show(matching = search_filter):
+                        row(id = $index):
+                            readandwrite(food.name)
+                            readandwrite(food.scientific_name)
+                            readandwrite(food.food_group)
 
                     button(onclick = () => load_food()):
                         text "Load food"
