@@ -1,4 +1,5 @@
 import ./karax_tables/src/karax_tables
+import karax/vstyles
 import app_types, sugar, json, sequtils
 
 when defined(js):
@@ -27,17 +28,17 @@ when defined(js):
             buildHtml():
                 tdiv:
                     input(`type` = "text", id = "search", onkeyup = () => search_foods(), placeholder = "search table")
-
-                    for index, food in foods.show(matching = search_filter):
-                        row(id = $index):
-                            readandwrite(food.name)
-                            readandwrite(food.scientific_name)
-                            readandwrite(food.food_group)
+                    p:
+                        text "Total number of unclassified foods: " & $(foods.filter((food) => food.food_group == Unclassified).len)
 
                     button(onclick = () => load_food()):
                         text "Load food"
 
-                    p:
-                        text "Total number of unclassified foods: " & $(foods.filter((food) => food.food_group == Unclassified).len)
+                    table:
+                        heading("Name", "Scientific Name", "Category")
+                        tbody:
+                            for index, food in foods.show(matching = search_filter):
+                                readandwrite_row(food.name, food.scientific_name, food.food_group, id = $index)
+
 
     setRenderer render

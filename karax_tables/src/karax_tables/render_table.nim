@@ -96,32 +96,27 @@ when defined(js):
     include karax/prelude
     import karax / [kdom]
 
-    proc id_seed(vnode: VNode, seed:int = 50): VNode =
-        result = vnode
-        result.setAttr("id", $(0..seed).toSeq.sample)
-        return result
-
     proc heading*(headings: varargs[string]): VNode =
-        result = buildHtml(thead()).id_seed
+        result = buildHtml(tr())
 
         for heading in headings:
             result.add(
                 buildHtml(
                     th(
-                        text heading
+                        span(
+                            text heading
+                        )
                     )
-                ).id_seed
+                )
             )
 
-    proc row*(seed: int = 200): VNode =
-        result = buildHtml(tr()).id_seed
+        return buildHtml(thead(result))
 
-    proc row*(seed: int = 200, id: string): VNode =
+    proc row*(id: int): VNode =
+        result = buildHtml(tr(id = $id))
+
+    proc row*(id: string): VNode =
         result = buildHtml(tr(id = id))
-
-    proc row*(seed: int = 200, event: EventKind, cb: EventHandler): VNode =
-        result = buildHtml(tr())
-        result.events.add((event, cb, nil))
 
     iterator show*[T](all: seq[T], matching = ""): tuple[index: int, val: T] =
         var 
@@ -136,28 +131,34 @@ when defined(js):
 
     ### Read and Write
     proc readandwrite*(elem: bool): VNode =
-        result = buildHtml(input(`type` = "checkbox")).id_seed
+        result = buildHtml(td(input(`type` = "checkbox")))
         
         if elem:
             result.setAttr("checked", "true")
 
     proc readandwrite*(elem: bool, id: string | int): VNode =
-        result = buildHtml(input(`type` = "checkbox", id = id)).id_seed
+        result = buildHtml(td(input(`type` = "checkbox", id = id)))
         
         if elem:
             result.setAttr("checked", "true")
 
     proc readandwrite*(elem: string, textarea = false): VNode =
         if textarea:
-            buildHtml(textarea(type = "text", value = elem)).id_seed
+            buildHtml(td(textarea(type = "text", value = elem)))
         else:
-            buildHtml(input(type = "text", value = elem)).id_seed
+            buildHtml(td(input(type = "text", value = elem)))
 
-    proc readandwrite*(elem: string, id: string | int): VNode =
-        buildHtml(input(type = "text", value = elem, id = $id))
+    proc readandwrite*(elem: string, textarea = false, id: string | int): VNode =
+        if textarea:
+            buildHtml(td(textarea(type = "text", value = elem, id = $id)))
+        else:
+            buildHtml(td(input(type = "text", value = elem, id = $id)))
 
     proc readandwrite*(elem: int): VNode =
-        buildHtml(input(type = "number", value = $elem)).id_seed
+        buildHtml(td(input(type = "number", value = $elem)))
+
+    proc readandwrite*(elem: int, id: string): VNode =
+        buildHtml(td(input(type = "number", value = $elem, id = $id)))
 
     proc readandwrite*(elem: enum): VNode =
         let 
@@ -171,24 +172,26 @@ when defined(js):
         )
 
     proc readandwrite*(elem: enum, id: string | int): VNode =
-        result = readandwrite(elem).id_seed
+        result = readandwrite(elem, id)
 
     ### Read only
     proc readonly*(elem: bool): VNode =
-        result = readandwrite(elem)
-        result.setAttr("disabled", "disabled")
+        result = buildHtml(td(input(`type` = "checkbox", disabled="disabled")))
+        
+        if elem:
+            result.setAttr("checked", "true")
 
     proc readonly*(elem: bool, id: string | int): VNode =
         result = readandwrite(elem, id)
         result.setAttr("disabled", "disabled")
 
     proc readonly*(elem: VNode): VNode =
-        buildHtml(td(elem)).id_seed
+        buildHtml(td(elem))
     
     proc readonly*(elem: string | int | float): VNode =
-        buildHtml(td(text(elem))).id_seed
+        buildHtml(td(text(elem)))
 
-    proc readonly*(elem: VNode, id: int | string): VNode =
+    proc readonly*(elem: VNode, id: string | string): VNode =
         buildHtml(td(elem, id = $id))
 
     proc readonly*[T](elem: string | int | float, id: string | int): VNode =
@@ -210,20 +213,25 @@ when defined(js):
 
         result = buildHtml(td(optionsMenu(name = $elem.typeof, 
                             message = "", 
-                            id = $(0..options.len).toSeq.sample,
+                            id = $id,
                             selected = $elem, 
                             options = options,
                             disabled = true))
-        ).id_seed
+        )
 
-    proc readonly_row*[T](elems: varargs[T, readonly]): VNode =
-        result = buildHtml(tr()).id_seed
+    proc readonly_row*[T](elems: varargs[T, readonly], id: string): VNode =
+        result = buildHtml(tr(id = $id))
+        for elem in elems:
+            result.add(elem)
+
+    proc readandwrite_row*[T](elems: varargs[T, readandwrite], id: string): VNode =
+        result = buildHtml(tr(id = $id))
         for elem in elems:
             result.add(elem)
 
     ### Hidden
-    proc hidden*(hidden: int | string): VNode =
+    proc hidden*(hidden: int | string, id: string): VNode =
         result =
             buildHtml(
                 input(`type` = "hidden", value = $hidden)
-            ).id_seed
+            )
